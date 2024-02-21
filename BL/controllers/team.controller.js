@@ -33,6 +33,36 @@ async function readMany(filter) {
 // res();
 
 
+async function addnewwork(id, data) {
+    // console.log("addnewwork", data);
+    const team = await teamModel.findById(id).populate("teamUsers");
+    
+    team.teamUsers.forEach(async (user) => {
+        if (user.work.find(workId => workId.toString() === data.toString())) {
+            console.log("already in work");
+            return;
+        }
+        user.work.push(data);
+        await user.save();  // אם אתה משתמש ב-async/await, וודא שגם פה אתה ממתין לסיום ה-save
+    });
+    
+    // return team;
+}
+
+async function removework(id, data) {
+    // console.log("removework", data);
+    const team = await teamModel.findById(id).populate("teamUsers");
+    // console.log(team.teamUsers);
+
+    team.teamUsers.forEach(async (user) => {
+        user.work = user.work.filter(workId => workId.toString() !== data.toString());
+        await user.save();  
+        // console.log(user.work);
+    });
+
+    // return team;
+}
+
 
 
 async function update(id, data) {
@@ -54,4 +84,4 @@ async function delteam(id) {
     return await teamModel.findByIdAndUpdate(id, { isActive: false })
 }
 
-exports = module.exports = { create, readOne, readMany, update, delteam, addnewuser, readAll }
+exports = module.exports = { create, readOne, readMany, update, delteam, addnewuser, readAll, removework , addnewwork }

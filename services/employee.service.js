@@ -1,5 +1,6 @@
 const employeeController = require('../BL/controllers/employee.controller')
 const teamController = require('../BL/controllers/team.controller')
+const workController = require('../BL/controllers/work.controller')
 
 async function createNewEmp(data) {
     if (!data.eName) {
@@ -33,12 +34,28 @@ async function readOneEmp(filter) {
     return await employeeController.readOne(filter)
 }
 
+async function readWorks(data) {
+    
+    const user = await employeeController.readOne({ _id: data })
+    console.log("user in readWorks: ", user)
+    if (!user) {
+        throw new Error("User does not exist");
+    }
+    if (user.work.length === 0) {
+        return;
+    }
+    const works = user.work
+    const worksInDB = await workController.readAll()
+    const worksInDBFiltered = worksInDB.filter(w => works.includes(w._id))
+    return worksInDBFiltered
+}
+
 async function loginEmp(data){
     const user = await employeeController.readOne({ phon: data.phon })
     if (!user) {
         throw new Error("User does not exist");
     }
-    console.log(user)
+    // console.log(user)
     if (user.email !== data.email) {
         throw new Error("Wrong details");
     }
@@ -97,4 +114,4 @@ async function deleteEmp(id) {
 
 
 
-module.exports = { createNewEmp, readOneEmp, readAllEmp, updateEmp, deleteEmp, loginEmp }
+module.exports = { createNewEmp, readOneEmp, readAllEmp, updateEmp, deleteEmp, readWorks, loginEmp }

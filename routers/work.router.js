@@ -3,6 +3,7 @@ const router = express.Router()
 const workService = require('../services/work.service')
 
 router.get('/', async (req, res) => {
+    
     try {
         const filter = req.query
         const work = await workService.readAllWork(filter)
@@ -23,6 +24,7 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/create', async (req, res) => {
+    // console.log(req.body)
     try {
         const data = req.body
         const work = await workService.createNewWork(data)

@@ -20,7 +20,7 @@ async function update(id, data) {
 }
 
 async function deletetask(id) {
-    return await taskModel.findByIdAndUpdate(id, { isActive: false })
+    return await taskModel.findByIdAndDelete(id)
 }
 
 exports = module.exports = { create, readOne, readAll, update, deletetask }

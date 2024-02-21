@@ -22,9 +22,20 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+router.get('/works/:id', async (req, res) => {
+    try {
+        const filter = req.params.id
+        console.log("lkjb",filter)
+        const employee = await employeeService.readWorks(filter)
+        res.status(200).json(employee)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
 router.post('/', async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const filter = req.body
         const employee = await employeeService.loginEmp(filter)
         res.status(200).json(employee)

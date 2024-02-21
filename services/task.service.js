@@ -43,7 +43,7 @@ async function updatetask(id, data) {
 }
 
 async function deletetask(id) {
-    return await taskController.delete(id)
+    return await taskController.deletetask(id)
 }
 
 module.exports = { createNewTask, readAlltask, updatetask, deletetask, readOneTask }
