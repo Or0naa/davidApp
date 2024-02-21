@@ -56,7 +56,7 @@ async function loginEmp(data){
         throw new Error("User does not exist");
     }
     // console.log(user)
-    if (user.email !== data.email) {
+    if (user.email.toLocaleLowerCase() !== data.email.toLocaleLowerCase()) {
         throw new Error("Wrong details");
     }
     return user
