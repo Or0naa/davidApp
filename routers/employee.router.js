@@ -25,7 +25,6 @@ router.get('/:id', async (req, res) => {
 router.get('/works/:id', async (req, res) => {
     try {
         const filter = req.params.id
-        console.log("lkjb",filter)
         const employee = await employeeService.readWorks(filter)
         res.status(200).json(employee)
     } catch (error) {

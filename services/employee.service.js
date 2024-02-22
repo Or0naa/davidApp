@@ -51,14 +51,15 @@ async function readWorks(data) {
 }
 
 async function loginEmp(data){
-    const user = await employeeController.readOne({ phon: data.phon })
+    const user = await employeeController.readOne({ phon: data.phon.replace(/\D/g, '') });
     if (!user) {
         throw new Error("User does not exist");
     }
-    // console.log(user)
+    
     if (user.email.toLocaleLowerCase() !== data.email.toLocaleLowerCase()) {
         throw new Error("Wrong details");
     }
+    
     return user
 }
 

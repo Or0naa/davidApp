@@ -13,7 +13,7 @@ async function readAll(){
 }
 
 async function readMany(filter) {
-    const result = await teamModel.find();
+    const result = await teamModel.find().populate("teamUsers teamName color");
     
     for (let i = 0; i < result.length; i++) {
         if (result[i].teamUsers.find(user => user._id.toString() === filter.id)) {
