@@ -57,6 +57,7 @@ async function addTaskToWork(id, data) {
 }
 
 
+
 async function deletework(id) {
     return await workModel.findByIdAndUpdate(id, { isActive: false })
 }

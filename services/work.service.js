@@ -54,26 +54,21 @@ async function readAllWork(filter) {
 }
 
 async function updateWork(id, data) {
-    const previousWork = await workController.readOne({ _id: id })
-    if (data.teamId !== previousWork.teamId) {
-        // console.log("teamId changed")
-        // console.log(data.teamId)
-        // console.log(previousWork.teamId)
-        try {
-            const removeTeam = await teamController.removework(previousWork.teamId, id);
-        }
-        catch (error) {
-            console.log(error)
-        }
-        try {
-            const updateTeam = await teamController.addnewwork(data.teamId, id);
-        }
-        catch (error) {
-            console.log(error)
-        }
+    const previousWork = await workController.readOne({ _id: id });
+    try {
+        // נסיר את העבודה מרשימת העבודות של הצוות הקודם
+        await teamController.removework(previousWork.teamId, id);
+
+        // נוסיף את העבודה לרשימת העבודות של הצוות החדש
+        await teamController.addnewwork(data.teamId, id);
+
+        // עדכון העבודה במקובל
+        return await workController.update(id, data);
+    } catch (error) {
+        console.error('Error in updateWork:', error);
+        throw error; // החזרת השגיאה למי שקרא לפונקציה
     }
 
-    return await workController.update(id, data)
 }
 
 async function deleteWork(id) {
