@@ -8,13 +8,13 @@ async function readOne(filter) {
     return await teamModel.findOne(filter).populate("teamUsers teamName color");
 }
 
-async function readAll(){
-    return await teamModel.find( { isActive: true }).populate("teamUsers teamName color");
+async function readAll() {
+    return await teamModel.find({ isActive: true }).populate("teamUsers teamName color");
 }
 
 async function readMany(filter) {
     const result = await teamModel.find().populate("teamUsers teamName color");
-    
+
     for (let i = 0; i < result.length; i++) {
         if (result[i].teamUsers.find(user => user._id.toString() === filter.id)) {
             result[i].isMember = true;
@@ -36,7 +36,7 @@ async function readMany(filter) {
 async function addnewwork(id, data) {
     // console.log("addnewwork", data);
     const team = await teamModel.findById(id).populate("teamUsers");
-    
+
     team.teamUsers.forEach(async (user) => {
         if (user.work.find(workId => workId.toString() === data.toString())) {
             console.log("already in work");
@@ -45,20 +45,26 @@ async function addnewwork(id, data) {
         user.work.push(data);
         await user.save();  // אם אתה משתמש ב-async/await, וודא שגם פה אתה ממתין לסיום ה-save
     });
-    
+
     // return team;
 }
 
 async function removework(id, data) {
     // console.log("removework", data);
-    const team = await teamModel.findById(id).populate("teamUsers");
-    // console.log(team.teamUsers);
+    console.log("removework", data);
+    try {
+        const team = await teamModel.findById(id).populate("teamUsers");
+        // console.log(team.teamUsers);
 
-    team.teamUsers.forEach(async (user) => {
-        user.work = user.work.filter(workId => workId.toString() !== data.toString());
-        await user.save();  
-        // console.log(user.work);
-    });
+        team.teamUsers.forEach(async (user) => {
+            user.work = user.work.filter(workId => workId.toString() !== data.toString());
+            await user.save();
+            // console.log(user.work);
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
 
     // return team;
 }
@@ -84,4 +90,4 @@ async function delteam(id) {
     return await teamModel.findByIdAndUpdate(id, { isActive: false })
 }
 
-exports = module.exports = { create, readOne, readMany, update, delteam, addnewuser, readAll, removework , addnewwork }
+exports = module.exports = { create, readOne, readMany, update, delteam, addnewuser, readAll, removework, addnewwork }

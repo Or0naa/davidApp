@@ -35,9 +35,8 @@ router.post('/create', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    console.log(req.params.id)
-    console.log(req.body)
-    try {
+    // console.log(req.params.id)
+   try {
         const id = req.params.id
         const data = req.body
         const work = await workService.updateWork(id, data)
@@ -48,9 +47,10 @@ router.put('/:id', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
+    
     try {
         const id = req.params.id
-        const work = await workService.deleteWork(id)
+        const work = await workService.deleteWork(id, req.body)
         res.status(200).json(work)
     } catch (error) {
         res.status(500).json({ message: error.message })

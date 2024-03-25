@@ -55,31 +55,45 @@ async function readAllWork(filter) {
 
 async function updateWork(id, data) {
     const previousWork = await workController.readOne({ _id: id });
+    // console.log("previousWork", previousWork);
     try {
         // נסיר את העבודה מרשימת העבודות של הצוות הקודם
-        await teamController.removework(previousWork.teamId, id);
-
+        const removed = await teamController.removework(previousWork.teamId, id);
+        console.log("removed", removed);
+    } catch (error) {
+        console.error('Error in updateWork:', error);
+    }
+    try {
         // נוסיף את העבודה לרשימת העבודות של הצוות החדש
-        await teamController.addnewwork(data.teamId, id);
+        const added = await teamController.addnewwork(data.teamId, id);
+        console.log("added", added);
 
         // עדכון העבודה במקובל
-        return await workController.update(id, data);
     } catch (error) {
         console.error('Error in updateWork:', error);
         throw error; // החזרת השגיאה למי שקרא לפונקציה
     }
+    return await workController.update(id, data);
+
 
 }
 
 async function deleteWork(id) {
     try {
         const work = await workController.readOne({ _id: id })
-        const removeTeam = await teamController.removework(work.teamId, id);
+        // console.log("work", work);
+        try {
+            const removed = await teamController.removework(work.teamId, id);
+            // console.log("removed", removed);
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
     catch (error) {
         console.log(error)
     }
-    return updateWork(id, { isActive: false })
+    return workController.update(id, { isActive: false })
 }
 
 module.exports = { createNewWork, readOneWork, readAllWork, updateWork, deleteWork }
